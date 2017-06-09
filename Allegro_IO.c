@@ -15,30 +15,17 @@
 #include "Common_definitions.h"
 
 
-void print_display (void * pointer, void * background,void * led_on_void, void * led_off_void, int elementos)
+void print_display (void * pointer, void * background, int elementos)
 {
     int counter;
     button * elemento = pointer;
-    ALLEGRO_BITMAP * led_on = led_on_void;
-    ALLEGRO_BITMAP * led_off = led_off_void;
-    
-    al_draw_bitmap((ALLEGRO_BITMAP *)background,0,0,0);
+
+    al_clear_to_color(al_color_name("hotpink"));
+ //   al_draw_bitmap((ALLEGRO_BITMAP *)background,0,0,0);
 
     for (counter = 0 ; counter < elementos ; ++counter)
     {      
-        if ((elemento + counter)->led_enabled)
-        {
-            if ( ( (elemento + counter)->led_on) )
-            {
-                al_draw_bitmap(led_on,(elemento + counter)->position_x,(elemento + counter)->position_y,0);
-  
-            }
-            else if (! ( (elemento + counter)->led_on ) )
-            {
-                al_draw_bitmap(led_off,(elemento + counter)->position_x,(elemento + counter)->position_y,0);
-            }
-        }
-        else if (! ( (elemento + counter)->led_enabled))
+        if (! ( (elemento + counter)->button_enabled))
         {
            al_draw_bitmap((elemento + counter)->bitmap,(elemento + counter)->position_x,(elemento + counter)->position_y,0);
         }
@@ -84,4 +71,16 @@ int button_pressed (int mouse_x, int mouse_y, void * pointer2, int elements)
     }
     
     return counter;
+}
+
+void manage_movement ( valid_keys * active_keys, int key_typed, bool is_key_down)
+{
+    switch (key_typed)
+    {
+        case UP : active_keys->up = is_key_down; break;
+        case DOWN : active_keys->down = is_key_down; break;
+        case LEFT : active_keys->left = is_key_down; break;
+        case RIGHT : active_keys->right = is_key_down; break;
+        case PAUSE : active_keys->pause = is_key_down; break;
+    }
 }

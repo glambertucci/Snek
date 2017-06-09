@@ -22,14 +22,36 @@ typedef struct
     float position_y;
     int lenght_x;
     int lenght_y;
-    bool led_on;
-    bool led_enabled;
+    bool button_enabled;
     ALLEGRO_BITMAP * bitmap;
     
 } button;
 
-#define DISPLAY_W (1000)
-#define DISPLAY_H (1000)
+typedef struct
+{
+    bool up;
+    bool down;
+    bool left;
+    bool right;
+    bool pause;
+} valid_keys;
+
+
+// Screen related
+#define FPS (60.0)
+#define UNIT (40)
+#define VERTICAL_UNITS (15)
+#define HORIZONTAL_UNITS (25)
+#define TEXT_SPACE (60)
+#define DISPLAY_W (UNIT * HORIZONTAL_UNITS)
+#define DISPLAY_H (UNIT * VERTICAL_UNITS + TEXT_SPACE)
+
+// Keyboard related
+#define UP (ALLEGRO_KEY_UP)
+#define DOWN (ALLEGRO_KEY_DOWN)
+#define LEFT (ALLEGRO_KEY_LEFT)
+#define RIGHT (ALLEGRO_KEY_RIGHT)
+#define PAUSE (ALLEGRO_KEY_SPACE)
 
 #endif /* COMMON_DEFINITIONS_H */
 

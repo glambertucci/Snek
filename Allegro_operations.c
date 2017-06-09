@@ -16,35 +16,57 @@
 
 
 #define SQUARE_X(counter) (ESPACIO_LAT+(counter * ESPACIO_INT) + (counter * LARGO_X ))
-//#define RECTANGLE_X(counter) (ESPACIO_LAT_RECT + (counter * ESPACIO_INT_RECT) + (counter *LARGO_RECT_X))
 
 
-void init_coord (void * element_pointer ,bool led_on ,bool led_enabled,void * bitmap_pointer)
+void init_coord (void * element_pointer ,bool button_enabled,void * bitmap_pointer)
 {
     button * elemento = element_pointer;
     ALLEGRO_BITMAP * bitmap = bitmap_pointer;
     static int counter1 = 0;
     static int counter2 = 0;
     
-    elemento->led_enabled = led_enabled;
+    elemento->button_enabled = button_enabled;
 
-    if (elemento->led_enabled)                          // Si es un led
+    if (!(elemento->button_enabled))                          // Si es la snek
     {
-        elemento->position_x = SQUARE_X(counter1); 
-        elemento->position_y = 100;
-        elemento->lenght_x= LARGO_X;
-        elemento->lenght_y= LARGO_Y;
+        elemento->position_x = UNIT * 13; 
+        elemento->position_y = UNIT * 7 + TEXT_SPACE;
+        elemento->lenght_x= UNIT;
+        elemento->lenght_y= UNIT;
         ++counter1;
     }
-    else if (!(elemento->led_enabled))                  // Si es un boton
+    else if (elemento->button_enabled)                  // Si es un boton
     {
         elemento->position_x = SQUARE_X(counter2); 
-        elemento->position_y = 400;
+        elemento->position_y = DISPLAY_H / 2.0;
         elemento->lenght_x= LARGO_X;
         elemento->lenght_y= LARGO_Y;
         ++counter2;
     }
-    elemento->led_on = led_on;
     elemento->bitmap = bitmap;
   
+}
+
+void apply_movement(button * snek, valid_keys * active_keys)
+{
+    if (active_keys->up)
+        snek->position_y -= UNIT;
+    else if (active_keys->down)
+        snek->position_y += UNIT;
+    if (active_keys->left)
+        snek->position_x -= UNIT;
+    else if (active_keys->right)
+        snek->position_x += UNIT;
+}
+
+void correct_movement(button * snek)
+{
+    if (snek->position_x >= DISPLAY_W)
+        snek->position_x = 0;
+    if (snek->position_y >= DISPLAY_H)
+        snek->position_y = 0 + TEXT_SPACE;
+    if (snek->position_x < 0)
+        snek->position_x = DISPLAY_W;
+    if (snek->position_y < 0 + TEXT_SPACE)
+        snek->position_y = DISPLAY_H;
 }

@@ -18,6 +18,7 @@
 #include <allegro5/allegro_color.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include "Common_definitions.h"
 
 // Se fija si al hacer click, tocaste algun boton. Si lo tocaste devuelve 'true', sino devuelve 'false'
 //
@@ -46,6 +47,12 @@ int button_pressed (int mouse_x, int mouse_y, void * pointer2, int elements);
 // void * led_on_void : Es un puntero que apunta a un bitmap de allegro, que se utiliza para mostrar que un led esta encendido
 // void * led_off_void : Es un puntero que apunta a un bitmap de allegro, que se utiliza para mostrar que un led esta apagado
 // int elements :   Es la cantidad de botones que hay en pantalla y que se quiere fijar si se han tocado
-void print_display (void * element_pointer, void * background,void * led_on_void, void * led_off_void, int elementos);
+void print_display (void * element_pointer, void * background, int elementos);
 
+// Esta funcion permite controlar el movimiento
+//
+// valid_keys * active_keys : Es un puntero a una estructura definida en Common_definitios.h, que contiene a las teclas que puede ser presionadas
+// int key_typed : Es la tecla que fue presionada, de no haber presionada ninguna tecla, no modificara nada.
+// bool is_key_down : Establece si se esta presionando la tecla, o si se esta levantado el dedo. 
+void manage_movement ( valid_keys * active_keys, int key_typed, bool is_key_down);
 #endif /* ALLEGRO_IO_H */

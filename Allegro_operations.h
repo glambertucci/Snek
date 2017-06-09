@@ -27,6 +27,10 @@
 // bool led_on : Indica si el led va a estar encendido. debe ser  'true' o 'false'
 // bool led_enabled : Indica si se trata de un led, de estar en 'true' se lo va a cargar como si fuese un led. Si esta en 'false' podra tener su bitmap propio y se comportara como un boton
 // void * bitmap_pointer : Es un puntero al bitmap que se le cargara en caso de que led_enabled este desactivado. Si led_enabled esta activado debe ser NULL.
-void init_coord (void * element_pointer ,bool led_on, bool led_enabled ,void * bitmap_pointer);
+void init_coord (void * element_pointer ,bool button_enabled ,void * bitmap_pointer);
+
+void apply_movement(button * snek, valid_keys * active_keys);
+
+void correct_movement(button * snek);
 
 #endif /* ALLEGRO_OPERATIONS_H */
