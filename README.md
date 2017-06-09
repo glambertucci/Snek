@@ -1,2 +1,13 @@
 # Snek
 TP Final de Programacion
+
+Allegro:
+* Hacer el backend de la dificultad........................OK`
+* Hacer el backend del movimiento de la serpiente.........`
+* Hacer el frontend del movimiento de la serpiente........
+* Agregar los controles mediante teclado..................
+* Realizar la interfaz del programa.......................
+* Agregar la musica.......................................
+
+Pi:
+Similar
