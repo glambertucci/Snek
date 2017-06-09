@@ -47,8 +47,22 @@ void init_coord (void * element_pointer ,bool button_enabled,void * bitmap_point
   
 }
 
-void apply_movement(button * snek, valid_keys * active_keys)
+void apply_movement(button * snek, valid_keys * active_keys,body * snek_body, int lenght)
 {
+    int counter = 20;
+  
+       
+    for (counter = lenght -1 ; counter >=1 ; --counter)
+    {
+        snek_body[counter].x = snek_body[counter-1].x;
+        snek_body[counter].y = snek_body[counter-1].y;
+    }
+    if ((counter == 0) || (lenght ==0))
+    {
+        snek_body[0].x = snek->position_x;
+        snek_body[0].y =snek->position_y;
+    }
+        
     if (active_keys->up)
         snek->position_y -= UNIT;
     else if (active_keys->down)

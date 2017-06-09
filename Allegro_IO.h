@@ -47,7 +47,7 @@ int button_pressed (int mouse_x, int mouse_y, void * pointer2, int elements);
 // void * led_on_void : Es un puntero que apunta a un bitmap de allegro, que se utiliza para mostrar que un led esta encendido
 // void * led_off_void : Es un puntero que apunta a un bitmap de allegro, que se utiliza para mostrar que un led esta apagado
 // int elements :   Es la cantidad de botones que hay en pantalla y que se quiere fijar si se han tocado
-void print_display (void * element_pointer, void * background, int elementos);
+void print_display (button * head,body * snek_body, void * background, int elementos);
 
 // Esta funcion permite controlar el movimiento
 //

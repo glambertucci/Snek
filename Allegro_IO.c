@@ -15,21 +15,24 @@
 #include "Common_definitions.h"
 
 
-void print_display (void * pointer, void * background, int elementos)
+void print_display (button * head,body * snek_body, void * background, int elementos)
 {
     int counter;
-    button * elemento = pointer;
+    
 
     al_clear_to_color(al_color_name("hotpink"));
  //   al_draw_bitmap((ALLEGRO_BITMAP *)background,0,0,0);
 
     for (counter = 0 ; counter < elementos ; ++counter)
     {      
-        if (! ( (elemento + counter)->button_enabled))
+        if (counter == 0)
         {
-           al_draw_bitmap((elemento + counter)->bitmap,(elemento + counter)->position_x,(elemento + counter)->position_y,0);
+           al_draw_bitmap(head->bitmap,head->position_x ,head->position_y,0);
         }
-
+        else
+        {
+            al_draw_bitmap(head->bitmap,(snek_body + counter -1)->x ,(snek_body + counter -1)->y,0);
+        }
     }
 
     al_flip_display();

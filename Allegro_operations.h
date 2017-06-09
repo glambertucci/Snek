@@ -29,7 +29,7 @@
 // void * bitmap_pointer : Es un puntero al bitmap que se le cargara en caso de que led_enabled este desactivado. Si led_enabled esta activado debe ser NULL.
 void init_coord (void * element_pointer ,bool button_enabled ,void * bitmap_pointer);
 
-void apply_movement(button * snek, valid_keys * active_keys);
+void apply_movement(button * snek, valid_keys * active_keys,body * snek_body, int lenght);
 
 void correct_movement(button * snek);
 

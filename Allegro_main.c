@@ -31,7 +31,6 @@
 #define MID_GROWTH  (2)
 #define FAST_GROWTH (3)
 
-#define SPEED(a) (a)
 
 #define DIFFICULTY_BUTTONS (3)
 
@@ -41,13 +40,15 @@ int main(void)
     ALLEGRO_EVENT_QUEUE * event_line = NULL;
     ALLEGRO_TIMER * timer = NULL;
     
+    body * snek_body = NULL;
+    
     button difficulty[3];
     button snek;
     valid_keys active_keys = {false,false,false,false,false};
     
     bool mode_locked = false;
     char mode = 0;
-    int speed = 0, growth = 0;
+    int speed = 0, growth = 0,lenght =(-1);
     
     bool close_screen = false;
     bool redraw = false;
@@ -195,11 +196,13 @@ int main(void)
                         close_screen = true;
                     else if(mode_locked)
                     {
-                        manage_movement(&active_keys,UP, false);
-                        manage_movement(&active_keys,DOWN, false);
-                        manage_movement(&active_keys,LEFT, false);
-                        manage_movement(&active_keys,RIGHT, false);
-                        manage_movement(&active_keys,PAUSE, false);
+                        if (!active_keys.pause)
+                        {
+                            manage_movement(&active_keys,UP, false);
+                            manage_movement(&active_keys,DOWN, false);
+                            manage_movement(&active_keys,LEFT, false);
+                            manage_movement(&active_keys,RIGHT, false);
+                        }
                         manage_movement(&active_keys,event.keyboard.keycode, true); 
                     }
                     printf(" UP = %d DOWN = %d LEFT = %d RIGHT = %d space = %d\n",active_keys.up,active_keys.down,active_keys.left,active_keys.right,active_keys.pause);
@@ -229,9 +232,23 @@ int main(void)
                     break; 
                 case ALLEGRO_EVENT_TIMER :
                     
-                    if ( mode_locked && !(event.timer.count % ((int)FPS / speed)))
+                    if (  mode_locked && !(event.timer.count % ((int)FPS / speed)))
                     {
-                        apply_movement(&snek, &active_keys);
+                        if(active_keys.pause)
+                        {
+                            ++lenght;
+                            manage_movement(&active_keys,PAUSE, false);
+                            if (!(snek_body = realloc(snek_body,(lenght +1) * sizeof(body))))
+                            {
+                                return -1;
+                            }
+
+                            snek_body[lenght].x = snek.position_x;
+                            snek_body[lenght].y = snek.position_y;
+                            
+                            
+                        }
+                        apply_movement(&snek, &active_keys,snek_body,lenght);
                         correct_movement(&snek);
                         redraw = true;
                     }
@@ -243,12 +260,12 @@ int main(void)
         if (redraw && al_event_queue_is_empty(event_line) && mode_locked)
         {
             redraw = false;
-            print_display((void *) &snek,NULL,1);
+            print_display( &snek,snek_body,NULL,lenght+1);
         }
     }
     
    
-    
+    free(snek_body);
     al_destroy_bitmap(difficulty[HARD_MODE].bitmap);
     al_destroy_bitmap(difficulty[EASY_MODE].bitmap);
     al_destroy_bitmap(difficulty[MEDIUM_MODE].bitmap);

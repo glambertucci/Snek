@@ -36,6 +36,12 @@ typedef struct
     bool pause;
 } valid_keys;
 
+typedef struct
+{
+    float x;
+    float y;
+} body ;
+
 
 // Screen related
 #define FPS (60.0)
