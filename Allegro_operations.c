@@ -84,3 +84,19 @@ void correct_movement(button * snek)
     if (snek->position_y < 0 + TEXT_SPACE)
         snek->position_y = DISPLAY_H;
 }
+#include "Allegro_IO.h"
+int interception (int head_x, int head_y, void * forb_coord, int elements)
+{
+    body * snek_body = forb_coord;
+    int counter;
+    bool valid = false;
+    
+    for (counter = 0 ; !valid && (counter < (elements+1)) ; ++counter) // Se fija si se toco a algun boton
+    {
+        valid = click_button(head_x,head_y,(snek_body + counter)->x,(snek_body + counter)->y, 20, 20);
+    }
+    
+
+    printf((valid ? "OK\n" : "OUT\n"));
+    return valid;
+}

@@ -164,7 +164,7 @@ int main(void)
     al_clear_to_color(al_color_name("green"));
     
     al_set_target_bitmap(al_get_backbuffer(display));
-    al_clear_to_color(al_color_name("hotpink"));
+    al_clear_to_color(al_color_name("white"));
     
     al_set_target_bitmap(difficulty[EASY_MODE].bitmap);
     al_clear_to_color(al_color_name("white"));
@@ -194,17 +194,19 @@ int main(void)
                     
                     if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
                         close_screen = true;
-                    else if(mode_locked)
+                    else if(mode_locked && (event.keyboard.keycode != ALLEGRO_KEY_SPACE))
                     {
-                        if (!active_keys.pause)
-                        {
+                       // if (active_keys.pause)
+                       // {
                             manage_movement(&active_keys,UP, false);
                             manage_movement(&active_keys,DOWN, false);
                             manage_movement(&active_keys,LEFT, false);
                             manage_movement(&active_keys,RIGHT, false);
-                        }
+                      //  }
                         manage_movement(&active_keys,event.keyboard.keycode, true); 
                     }
+                    else if (mode_locked && (event.keyboard.keycode == ALLEGRO_KEY_SPACE))
+                        manage_movement(&active_keys,event.keyboard.keycode, true);
                     printf(" UP = %d DOWN = %d LEFT = %d RIGHT = %d space = %d\n",active_keys.up,active_keys.down,active_keys.left,active_keys.right,active_keys.pause);
                     break;
 
@@ -234,9 +236,11 @@ int main(void)
                     
                     if (  mode_locked && !(event.timer.count % ((int)FPS / speed)))
                     {
-                        if(active_keys.pause)
+                        if(active_keys.pause)       //Esta parte del codigo permite agregar mas partes del cuerpo a la vibora
                         {
-                            ++lenght;
+                            if (lenght == -1)
+                                ++lenght;
+                            
                             manage_movement(&active_keys,PAUSE, false);
                             if (!(snek_body = realloc(snek_body,(lenght +1) * sizeof(body))))
                             {
@@ -245,13 +249,13 @@ int main(void)
 
                             snek_body[lenght].x = snek.position_x;
                             snek_body[lenght].y = snek.position_y;
-                            
+                            ++lenght;
                             
                         }
                         apply_movement(&snek, &active_keys,snek_body,lenght);
-                        correct_movement(&snek);
+                        correct_movement(&snek);                                
                         redraw = true;
-                    }
+                    }                               // Hasta aca. Cuando pongamos los puntos hay que cambiar esto.
                     break;
                     
             }
@@ -261,6 +265,11 @@ int main(void)
         {
             redraw = false;
             print_display( &snek,snek_body,NULL,lenght+1);
+            if (interception(snek.position_x,snek.position_y,(void *) snek_body,lenght))
+            {
+                printf("Game Over\n");
+                close_screen = true;
+            }
         }
     }
     

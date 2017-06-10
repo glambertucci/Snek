@@ -22,6 +22,10 @@ void print_display (button * head,body * snek_body, void * background, int eleme
 
     al_clear_to_color(al_color_name("hotpink"));
  //   al_draw_bitmap((ALLEGRO_BITMAP *)background,0,0,0);
+    if (elementos == 0)
+        {
+           al_draw_bitmap(head->bitmap,head->position_x ,head->position_y,0);
+        }
 
     for (counter = 0 ; counter < elementos ; ++counter)
     {      
@@ -42,9 +46,12 @@ void print_display (button * head,body * snek_body, void * background, int eleme
 bool click_button(int mouse_x, int mouse_y, int button_x, int button_y , int lenght_x, int lenght_y )
 {
     bool valid = false; 
-    if ( (mouse_x > button_x) && (mouse_x < ( button_x + lenght_x) ))
+    
+    printf("button_x = %d < mouse_x = %d  < %d = button_x + lenght_x\n",button_x,mouse_x,button_x + lenght_x);
+    printf("button_y = %d < mouse_y = %d  < %d = button_y + lenght_y\n",button_y,mouse_y,button_y + lenght_y);
+    if ( (mouse_x >= button_x) && (mouse_x <= ( button_x + lenght_x) ))
     {
-        if ((mouse_y > button_y) && (mouse_y < ( button_y + lenght_y) ))
+        if ((mouse_y >= button_y) && (mouse_y <= ( button_y + lenght_y) ))
         {
             valid = true;
         }

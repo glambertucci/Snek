@@ -33,4 +33,5 @@ void apply_movement(button * snek, valid_keys * active_keys,body * snek_body, in
 
 void correct_movement(button * snek);
 
+int interception (int head_x, int head_y, void * forb_coord, int elements);
 #endif /* ALLEGRO_OPERATIONS_H */
