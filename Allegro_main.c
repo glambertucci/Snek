@@ -36,50 +36,43 @@
 
 int main(void) 
 {
-    ALLEGRO_DISPLAY * display = NULL;
-    ALLEGRO_EVENT_QUEUE * event_line = NULL;
-    ALLEGRO_TIMER * timer = NULL;
+    ALLEGRO_DISPLAY * display = NULL;           // El display
+    ALLEGRO_EVENT_QUEUE * event_line = NULL;    // La event queue
+    ALLEGRO_TIMER * timer = NULL;               // El timer
     
-    body * snek_body = NULL;
+    body * snek_body = NULL;                    // El arreglo que va a guardar las coordenadas del cuerpo de la serpiente
     
-    button difficulty[3];
-    button snek;
-    valid_keys active_keys = {false,false,false,false,false};
+    button difficulty[3];                       // El arreglo que guarda los botones de dificultad
+    button snek;                                // La cabeza de la serpiente
+    valid_keys active_keys = {false,false,false,false,false}; // El arreglo que maneja la inputo del teclado
     
-    bool mode_locked = false;
-    char mode = 0;
-    int speed = 0, growth = 0,lenght =(-1);
+    bool mode_locked = false;                   // bloquea el modo de la dificultad
+    char mode = 0;                              // aqui se guarda la dificultad elegida
+    int speed = 0, growth = 0,lenght =(-1);     
     
-    bool close_screen = false;
-    bool redraw = false;
+    bool close_screen = false;                  // Determina si termina el programa
+    bool redraw = false;                        
     
     
-    init_coord((void *) &(difficulty[EASY_MODE]) , true, NULL);
+    init_coord((void *) &(difficulty[EASY_MODE]) , true, NULL);     // Inicia los botones y la cabeza de la serpiente
     init_coord((void *) &(difficulty[MEDIUM_MODE]) , true, NULL);
     init_coord((void *) &(difficulty[HARD_MODE]) ,  true, NULL);
     init_coord((void *) &snek, false, NULL);
-    printf("1");
     
     if (al_init())
     {
         if ( ( display = al_create_display(DISPLAY_W, DISPLAY_H)))
         {
-            printf("2");
             if (event_line = al_create_event_queue())
             {
-                printf("3");
                 if (difficulty[EASY_MODE].bitmap = al_create_bitmap(difficulty[EASY_MODE].lenght_x,difficulty[EASY_MODE].lenght_y) )
                 {
-                    printf("4");
                     if (difficulty[MEDIUM_MODE].bitmap = al_create_bitmap(difficulty[MEDIUM_MODE].lenght_x, difficulty[MEDIUM_MODE].lenght_y))
                     {
-                        printf("5");
                         if (difficulty[HARD_MODE].bitmap = al_create_bitmap(difficulty[HARD_MODE].lenght_x, difficulty[HARD_MODE].lenght_y))
                         {  
-                            printf("6");
                             if (timer = al_create_timer(1 / FPS))
                             {
-                                printf("7");
                                 if (snek.bitmap = al_create_bitmap(snek.lenght_x,snek.lenght_y))
                                 {
                                     al_install_mouse();
@@ -160,22 +153,22 @@ int main(void)
     al_register_event_source(event_line,al_get_timer_event_source(timer));
     
     
-    al_set_target_bitmap(snek.bitmap);
-    al_clear_to_color(al_color_name("green"));
+    al_set_target_bitmap(snek.bitmap);              // Cargo el color de la cabeza de la serpiente.
+    al_clear_to_color(al_color_name("green"));      // Ahora es el mismo que el cuerpo pero despues va a haber que cambiarlo
     
-    al_set_target_bitmap(al_get_backbuffer(display));
+    al_set_target_bitmap(al_get_backbuffer(display)); // Pongo la pantalla en blanco 
     al_clear_to_color(al_color_name("white"));
     
-    al_set_target_bitmap(difficulty[EASY_MODE].bitmap);
+    al_set_target_bitmap(difficulty[EASY_MODE].bitmap); // Cargo el color del boton facil
     al_clear_to_color(al_color_name("white"));
     
-    al_set_target_bitmap(difficulty[MEDIUM_MODE].bitmap);
+    al_set_target_bitmap(difficulty[MEDIUM_MODE].bitmap);   //Cargo el color del boton medio
     al_clear_to_color(al_color_name("blue"));
     
-    al_set_target_bitmap(difficulty[HARD_MODE].bitmap);
+    al_set_target_bitmap(difficulty[HARD_MODE].bitmap);     // Cargo el color del boton dificil
     al_clear_to_color(al_color_name("grey"));
     al_set_target_bitmap(al_get_backbuffer(display));
-    
+                                                            // Dibujo todos los botones de dificultad
     al_draw_bitmap(difficulty[EASY_MODE].bitmap,difficulty[EASY_MODE].position_x, difficulty[EASY_MODE].position_y, 0);
     al_draw_bitmap(difficulty[MEDIUM_MODE].bitmap,difficulty[MEDIUM_MODE].position_x, difficulty[MEDIUM_MODE].position_y, 0);
     al_draw_bitmap(difficulty[HARD_MODE].bitmap,difficulty[HARD_MODE].position_x, difficulty[HARD_MODE].position_y, 0);
@@ -190,30 +183,27 @@ int main(void)
         {
             switch (event.type)
             {
-                case ALLEGRO_EVENT_KEY_DOWN : 
+                case ALLEGRO_EVENT_KEY_DOWN :   // Detecta cuando se toca una tecla
                     
-                    if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
+                    if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)   //Si se toca escape, se termina el juego
                         close_screen = true;
-                    else if(mode_locked && (event.keyboard.keycode != ALLEGRO_KEY_SPACE))
+                    else if(mode_locked && (event.keyboard.keycode >= ALLEGRO_KEY_LEFT) && (event.keyboard.keycode <= ALLEGRO_KEY_DOWN))
                     {
-                       // if (active_keys.pause)
-                       // {
-                            manage_movement(&active_keys,UP, false);
-                            manage_movement(&active_keys,DOWN, false);
-                            manage_movement(&active_keys,LEFT, false);
-                            manage_movement(&active_keys,RIGHT, false);
-                      //  }
+                        manage_movement(&active_keys,UP, false);        //Borra la direccion en la que se estaba
+                        manage_movement(&active_keys,DOWN, false);      //moviendo y la cambia por la nueva
+                        manage_movement(&active_keys,LEFT, false);
+                        manage_movement(&active_keys,RIGHT, false);
                         manage_movement(&active_keys,event.keyboard.keycode, true); 
                     }
                     else if (mode_locked && (event.keyboard.keycode == ALLEGRO_KEY_SPACE))
-                        manage_movement(&active_keys,event.keyboard.keycode, true);
+                        manage_movement(&active_keys,event.keyboard.keycode, true); // Si se toca espacio, va a agregar una parte mas al cuerpo. Esto es de prueba y hay que cambiarlo
                     printf(" UP = %d DOWN = %d LEFT = %d RIGHT = %d space = %d\n",active_keys.up,active_keys.down,active_keys.left,active_keys.right,active_keys.pause);
                     break;
 
-                case ALLEGRO_EVENT_DISPLAY_CLOSE : close_screen = true; break;
+                case ALLEGRO_EVENT_DISPLAY_CLOSE : close_screen = true; break; //Si se cierra la pantalla termina el juego
                 case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN : 
-                    if (!mode_locked)
-                    {
+                    if (!mode_locked)               //Se elije cual fue el modo de juego elegido por el usuario y se establecen las
+                    {                               // configuraciones necesarias
                         mode =button_pressed(event.mouse.x, event.mouse.y, difficulty, DIFFICULTY_BUTTONS);
                         switch (mode)
                         {
@@ -234,7 +224,7 @@ int main(void)
                     break; 
                 case ALLEGRO_EVENT_TIMER :
                     
-                    if (  mode_locked && !(event.timer.count % ((int)FPS / speed)))
+                    if (  mode_locked && !(event.timer.count % ((int)FPS / speed))) // Determina la velocidad del juego
                     {
                         if(active_keys.pause)       //Esta parte del codigo permite agregar mas partes del cuerpo a la vibora
                         {
@@ -242,15 +232,16 @@ int main(void)
                                 ++lenght;
                             
                             manage_movement(&active_keys,PAUSE, false);
-                            if (!(snek_body = realloc(snek_body,(lenght +1) * sizeof(body))))
+                            if (snek_body = manage_body (snek_body, lenght, &snek)
+)
                             {
-                                return -1;
+                                
+                                ++lenght;
                             }
-
-                            snek_body[lenght].x = snek.position_x;
-                            snek_body[lenght].y = snek.position_y;
-                            ++lenght;
-                            
+                            else
+                            {
+                                close_screen = true;
+                            }
                         }
                         apply_movement(&snek, &active_keys,snek_body,lenght);
                         correct_movement(&snek);                                
