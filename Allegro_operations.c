@@ -123,12 +123,11 @@ int convert_char (char * string)
 	return num;
 }
 
-const char * convert_int (int numero)
+ void convert_int (int numero, char * num)
 {
 	int counter;
 	int how_long, try_num = numero;
-	char num [5] = {0,0,0,0,0};
-	char * point = num;
+
 
 	for ( how_long = 0; (try_num != 0 ) ; ++how_long)
 	{
@@ -143,7 +142,6 @@ const char * convert_int (int numero)
 		try_num = try_num - ( (try_num / power(10, counter -1)) * power(10, counter -1));
 	}
 
-	return (const) point;
 }
 
 int power ( int base, int exp)

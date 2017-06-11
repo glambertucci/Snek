@@ -41,7 +41,7 @@ int main(void)
     ALLEGRO_TIMER * timer = NULL;               // El timer
     
     body * snek_body = NULL;                    // El arreglo que va a guardar las coordenadas del cuerpo de la serpiente
-    body food = { 0,0};
+    body food;
     
     button difficulty[3];                       // El arreglo que guarda los botones de dificultad
     button snek;                                // La cabeza de la serpiente
@@ -49,7 +49,7 @@ int main(void)
     
     bool mode_locked = false;                   // bloquea el modo de la dificultad
     char mode = 0;                              // aqui se guarda la dificultad elegida
-    int speed = 0, growth = 0,lenght =(-1), score = 55;     
+    int speed = 0, growth = 0,lenght =(-1), score = 0;     
     
     bool close_screen = false;                  // Determina si termina el programa
     bool redraw = false;     
@@ -178,7 +178,7 @@ int main(void)
     
     al_start_timer(timer);
     
-    printf ( "high score = %d ",read_high_score());
+    printf ( "high score = %d \n",read_high_score());
     
     while (!close_screen)
     {
@@ -232,36 +232,22 @@ int main(void)
                     {
                         if(active_keys.pause)       //Esta parte del codigo permite agregar mas partes del cuerpo a la vibora
                         {
-                            if (lenght == -1)
-                                ++lenght;
-                            
-                            manage_movement(&active_keys,PAUSE, false);
-                            if (snek_body = manage_body (snek_body, lenght, &snek))
-                            {
-                                ++lenght;
-                            }
-                            else
-                            {
-                                close_screen = true;
-                            }
+                           
                         }
-                        if ( (!close_screen ) && (!food_exist) )
-                        {
-                            while (!food_exist)
-                            {
-                                generate_food (&food);
-                                food_exist = valid_placement(&food, &snek, snek_body, lenght);
-                            }
-                        }
+                        
                         if (!close_screen)
                         {
                             apply_movement(&snek, &active_keys,snek_body,lenght);
                             correct_movement(&snek);                                
                             redraw = true;
                         }
+                    } 
+                    while (!food_exist)
+                    {
                         
-                        
-                    }                               
+                        generate_food (&food);
+                        food_exist = valid_placement(&food, &snek, snek_body, lenght);
+                    }
                     break;
                     
             }
@@ -279,9 +265,23 @@ int main(void)
                 printf("Game Over\n");
                 close_screen = true;
             }
+            else if ( interception(snek.position_x, snek.position_y, (void *) &food,1) )
+            {
+                ++score;
+                food_exist = false;
+                 if (lenght == -1)
+                    ++lenght;
+                            
+                manage_movement(&active_keys,PAUSE, false);
+                if (snek_body = manage_body (snek_body, lenght, &snek))
+                    ++lenght;
+                else
+                    close_screen = true;
+            }
         }
     }
-   // write_high_score(score);
+    write_high_score(score);
+    printf("Score = %d", score);
     
    
     free(snek_body);

@@ -36,7 +36,7 @@ void correct_movement(button * snek);
 bool interception (int head_x, int head_y, void * forb_coord, int elements);
 body * manage_body (body * snek_body, int lenght, button * snek);
 int convert_char (char * string);
-const char * convert_int (int numero);
+void convert_int (int numero, char * dest);
 int power ( int base, int exp);
 bool valid_placement(body * food, button * snek, body * snek_body,int lenght);
 void generate_food (body * food);

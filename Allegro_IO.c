@@ -118,10 +118,14 @@ int read_high_score (void)
 void write_high_score (int score)
 {
 	FILE * high_score = NULL;
-
+        char dest [5]={0,0,0,0,0};
+        convert_int(score, dest);
 	if ((high_score = fopen("score.txt", "w+")))
 	{
-		fprintf(high_score, convert_int(score));
+		if ( fputs(dest,high_score) == EOF )
+                {
+                    
+                }
 		fclose(high_score);
 	}
 }
