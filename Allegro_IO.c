@@ -82,7 +82,6 @@ void manage_movement ( valid_keys * active_keys, int key_typed, bool is_key_down
         case DOWN : active_keys->down = is_key_down; break;
         case LEFT : active_keys->left = is_key_down; break;
         case RIGHT : active_keys->right = is_key_down; break;
-        case PAUSE : active_keys->pause = is_key_down; break;
     }
 }
 

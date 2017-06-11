@@ -48,6 +48,7 @@ int main(void)
     valid_keys active_keys = {false,false,false,false,false}; // El arreglo que maneja la inputo del teclado
     
     bool mode_locked = false;                   // bloquea el modo de la dificultad
+    bool wait_key = true;
     char mode = 0;                              // aqui se guarda la dificultad elegida
     int speed = 0, growth = 0,lenght =(-1), score = 0;     
     
@@ -191,16 +192,18 @@ int main(void)
                     
                     if (event.keyboard.keycode == ALLEGRO_KEY_ESCAPE)   //Si se toca escape, se termina el juego
                         close_screen = true;
-                    else if(mode_locked && (event.keyboard.keycode >= ALLEGRO_KEY_LEFT) && (event.keyboard.keycode <= ALLEGRO_KEY_DOWN))
+                    else if(wait_key && mode_locked && (event.keyboard.keycode >= ALLEGRO_KEY_LEFT) && (event.keyboard.keycode <= ALLEGRO_KEY_DOWN))
                     {
-                        manage_movement(&active_keys,UP, false);        //Borra la direccion en la que se estaba
-                        manage_movement(&active_keys,DOWN, false);      //moviendo y la cambia por la nueva
-                        manage_movement(&active_keys,LEFT, false);
-                        manage_movement(&active_keys,RIGHT, false);
-                        manage_movement(&active_keys,event.keyboard.keycode, true); 
+                        if (valid_movement(event.keyboard.keycode,&active_keys))
+                        {
+                            manage_movement(&active_keys,UP, false);        //Borra la direccion en la que se estaba
+                            manage_movement(&active_keys,DOWN, false);      //moviendo y la cambia por la nueva
+                            manage_movement(&active_keys,LEFT, false);
+                            manage_movement(&active_keys,RIGHT, false);
+                            manage_movement(&active_keys,event.keyboard.keycode, true); 
+                            wait_key = false;
+                        }
                     }
-                    else if (mode_locked && (event.keyboard.keycode == ALLEGRO_KEY_SPACE))
-                        manage_movement(&active_keys,event.keyboard.keycode, true); // Si se toca espacio, va a agregar una parte mas al cuerpo. Esto es de prueba y hay que cambiarlo
                     printf(" UP = %d DOWN = %d LEFT = %d RIGHT = %d space = %d\n",active_keys.up,active_keys.down,active_keys.left,active_keys.right,active_keys.pause);
                     break;
 
@@ -230,15 +233,11 @@ int main(void)
                     
                     if (  mode_locked && !(event.timer.count % ((int)FPS / speed))) // Determina la velocidad del juego
                     {
-                        if(active_keys.pause)       //Esta parte del codigo permite agregar mas partes del cuerpo a la vibora
-                        {
-                           
-                        }
-                        
                         if (!close_screen)
                         {
                             apply_movement(&snek, &active_keys,snek_body,lenght);
-                            correct_movement(&snek);                                
+                            correct_movement(&snek);     
+                            wait_key = true;
                             redraw = true;
                         }
                     } 
@@ -272,7 +271,6 @@ int main(void)
                  if (lenght == -1)
                     ++lenght;
                             
-                manage_movement(&active_keys,PAUSE, false);
                 if (snek_body = manage_body (snek_body, lenght, &snek))
                     ++lenght;
                 else
@@ -280,8 +278,9 @@ int main(void)
             }
         }
     }
-    write_high_score(score);
-    printf("Score = %d", score);
+    if ( score > read_high_score() )
+        write_high_score(score);
+    printf("Score = %d/n", score);
     
    
     free(snek_body);

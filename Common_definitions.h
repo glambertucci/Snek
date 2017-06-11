@@ -57,7 +57,6 @@ typedef struct
 #define DOWN (ALLEGRO_KEY_DOWN)
 #define LEFT (ALLEGRO_KEY_LEFT)
 #define RIGHT (ALLEGRO_KEY_RIGHT)
-#define PAUSE (ALLEGRO_KEY_SPACE)
 
 #endif /* COMMON_DEFINITIONS_H */
 

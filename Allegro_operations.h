@@ -40,7 +40,7 @@ void convert_int (int numero, char * dest);
 int power ( int base, int exp);
 bool valid_placement(body * food, button * snek, body * snek_body,int lenght);
 void generate_food (body * food);
-
+bool valid_movement(int keycode,valid_keys * active_keys);
 
 
 

@@ -171,3 +171,32 @@ bool valid_placement(body * food, button * snek, body * snek_body,int lenght)
     return valid;
         
 }       
+
+bool valid_movement(int keycode,valid_keys * active_keys)
+{
+    bool valid = true;
+    int key;
+    
+    switch(keycode)
+    {
+        case UP : 
+            if (active_keys->down)
+                valid = false;
+            break;
+        case DOWN : 
+            if (active_keys->up)
+                valid = false;
+            break;
+        case LEFT :
+            if (active_keys->right)
+                valid = false;
+            break;
+        case RIGHT :
+            if (active_keys->left)
+                valid = false;
+            break;
+    }
+    
+    return valid;
+    
+}
