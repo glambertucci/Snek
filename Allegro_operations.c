@@ -100,3 +100,13 @@ int interception (int head_x, int head_y, void * forb_coord, int elements)
     printf((valid ? "OK\n" : "OUT\n"));
     return valid;
 }
+
+body * manage_body (body * snek_body, int lenght, button * snek)
+{
+    if (snek_body = realloc(snek_body,(lenght +1) * sizeof(body)))
+    {
+        snek_body[lenght].x = snek->position_x;
+        snek_body[lenght].y = snek->position_y;
+    }
+    return snek_body;
+}
