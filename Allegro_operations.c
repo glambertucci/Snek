@@ -85,7 +85,7 @@ void correct_movement(button * snek)
         snek->position_y = DISPLAY_H;
 }
 #include "Allegro_IO.h"
-int interception (int head_x, int head_y, void * forb_coord, int elements)
+bool interception (int head_x, int head_y, void * forb_coord, int elements)
 {
     body * snek_body = forb_coord;
     int counter;
@@ -110,3 +110,66 @@ body * manage_body (body * snek_body, int lenght, button * snek)
     }
     return snek_body;
 }
+
+int convert_char (char * string)
+{
+	int counter;
+	int num = 0;
+
+	for ( counter = 0; (string[counter] != 0 ) ; ++counter)
+	{
+		num = num * 10 + (string[counter] - '0');
+	}
+	return num;
+}
+
+const char * convert_int (int numero)
+{
+	int counter;
+	int how_long, try_num = numero;
+	char num [5] = {0,0,0,0,0};
+	char * point = num;
+
+	for ( how_long = 0; (try_num != 0 ) ; ++how_long)
+	{
+		try_num = try_num / 10;
+	}
+
+	try_num = numero;
+
+	for (counter = how_long ; counter != 0 ; --counter)
+	{
+		num[how_long - counter] = ( (try_num / power(10, counter -1)) + '0');
+		try_num = try_num - ( (try_num / power(10, counter -1)) * power(10, counter -1));
+	}
+
+	return (const) point;
+}
+
+int power ( int base, int exp)
+{
+	int counter, num = 1;
+	for (counter = 1 ; counter <= exp ; ++counter)
+	{
+		num = num * base;
+	}
+	return num;
+}
+#include <time.h> 
+void generate_food (body * food)
+{
+    srand(time(NULL));
+    food->x =UNIT * ( rand() % HORIZONTAL_UNITS);
+    food->y =UNIT * ( rand() % VERTICAL_UNITS) + TEXT_SPACE;
+}
+#include "Allegro_IO.h"
+bool valid_placement(body * food, button * snek, body * snek_body,int lenght)
+{
+    bool valid = true;
+    if ( interception(food->x,food->y,(void *) snek_body, lenght) )
+        valid = false;
+    if (button_pressed(food->x,food->y,(void *) snek,1) != (-1))
+        valid = false;
+    return valid;
+        
+}       

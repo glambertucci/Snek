@@ -33,7 +33,15 @@ void apply_movement(button * snek, valid_keys * active_keys,body * snek_body, in
 
 void correct_movement(button * snek);
 
-int interception (int head_x, int head_y, void * forb_coord, int elements);
+bool interception (int head_x, int head_y, void * forb_coord, int elements);
 body * manage_body (body * snek_body, int lenght, button * snek);
+int convert_char (char * string);
+const char * convert_int (int numero);
+int power ( int base, int exp);
+bool valid_placement(body * food, button * snek, body * snek_body,int lenght);
+void generate_food (body * food);
+
+
+
 
 #endif /* ALLEGRO_OPERATIONS_H */

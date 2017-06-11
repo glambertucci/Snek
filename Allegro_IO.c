@@ -15,28 +15,19 @@
 #include "Common_definitions.h"
 
 
-void print_display (button * head,body * snek_body, void * background, int elementos)
+void print_display (button * head,body * snek_body, void * background,body * food, int elementos)
 {
     int counter;
-    
-
     al_clear_to_color(al_color_name("hotpink"));
- //   al_draw_bitmap((ALLEGRO_BITMAP *)background,0,0,0);
-    if (elementos == 0)
-        {
-           al_draw_bitmap(head->bitmap,head->position_x ,head->position_y,0);
-        }
+    
+    al_draw_bitmap(head->bitmap,food->x, food->y,0);
+
+    al_draw_bitmap(head->bitmap,head->position_x ,head->position_y,0);
+    
 
     for (counter = 0 ; counter < elementos ; ++counter)
     {      
-        if (counter == 0)
-        {
-           al_draw_bitmap(head->bitmap,head->position_x ,head->position_y,0);
-        }
-        else
-        {
-            al_draw_bitmap(head->bitmap,(snek_body + counter -1)->x ,(snek_body + counter -1)->y,0);
-        }
+        al_draw_bitmap(head->bitmap,(snek_body + counter)->x ,(snek_body + counter)->y,0);
     }
 
     al_flip_display();
@@ -93,4 +84,44 @@ void manage_movement ( valid_keys * active_keys, int key_typed, bool is_key_down
         case RIGHT : active_keys->right = is_key_down; break;
         case PAUSE : active_keys->pause = is_key_down; break;
     }
+}
+
+int read_high_score (void)
+{
+	
+	FILE * high_score = NULL;
+	char line [4];
+        int num = -1;
+
+	if (! (high_score = fopen("score.txt", "r"))) // fopen
+	{
+		high_score = fopen("score.txt", "w");
+   		fprintf(high_score, "0"); // fprintf
+		fclose(high_score); // fclose
+	}
+	high_score = fopen("score.txt", "r");
+	
+        if ( !fgets(line, 4,high_score))
+        {
+            printf("NOPEBOPE");
+        }
+        else
+        {
+            num = convert_char (line);
+        }
+	
+   	fclose(high_score); 
+
+	return num;
+}
+
+void write_high_score (int score)
+{
+	FILE * high_score = NULL;
+
+	if ((high_score = fopen("score.txt", "w+")))
+	{
+		fprintf(high_score, convert_int(score));
+		fclose(high_score);
+	}
 }

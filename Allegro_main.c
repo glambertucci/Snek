@@ -26,7 +26,7 @@
 #define HARD_MODE (2)
 #define LOW_SPEED (2)
 #define MID_SPEED (4)
-#define HIGH_SPEED (16)
+ #define HIGH_SPEED (16)
 #define SLOW_GROWTH (1)
 #define MID_GROWTH  (2)
 #define FAST_GROWTH (3)
@@ -41,6 +41,7 @@ int main(void)
     ALLEGRO_TIMER * timer = NULL;               // El timer
     
     body * snek_body = NULL;                    // El arreglo que va a guardar las coordenadas del cuerpo de la serpiente
+    body food = { 0,0};
     
     button difficulty[3];                       // El arreglo que guarda los botones de dificultad
     button snek;                                // La cabeza de la serpiente
@@ -48,10 +49,11 @@ int main(void)
     
     bool mode_locked = false;                   // bloquea el modo de la dificultad
     char mode = 0;                              // aqui se guarda la dificultad elegida
-    int speed = 0, growth = 0,lenght =(-1);     
+    int speed = 0, growth = 0,lenght =(-1), score = 55;     
     
     bool close_screen = false;                  // Determina si termina el programa
-    bool redraw = false;                        
+    bool redraw = false;     
+    bool food_exist = false;
     
     
     init_coord((void *) &(difficulty[EASY_MODE]) , true, NULL);     // Inicia los botones y la cabeza de la serpiente
@@ -176,6 +178,8 @@ int main(void)
     
     al_start_timer(timer);
     
+    printf ( "high score = %d ",read_high_score());
+    
     while (!close_screen)
     {
         ALLEGRO_EVENT event;
@@ -232,10 +236,8 @@ int main(void)
                                 ++lenght;
                             
                             manage_movement(&active_keys,PAUSE, false);
-                            if (snek_body = manage_body (snek_body, lenght, &snek)
-)
+                            if (snek_body = manage_body (snek_body, lenght, &snek))
                             {
-                                
                                 ++lenght;
                             }
                             else
@@ -243,10 +245,23 @@ int main(void)
                                 close_screen = true;
                             }
                         }
-                        apply_movement(&snek, &active_keys,snek_body,lenght);
-                        correct_movement(&snek);                                
-                        redraw = true;
-                    }                               // Hasta aca. Cuando pongamos los puntos hay que cambiar esto.
+                        if ( (!close_screen ) && (!food_exist) )
+                        {
+                            while (!food_exist)
+                            {
+                                generate_food (&food);
+                                food_exist = valid_placement(&food, &snek, snek_body, lenght);
+                            }
+                        }
+                        if (!close_screen)
+                        {
+                            apply_movement(&snek, &active_keys,snek_body,lenght);
+                            correct_movement(&snek);                                
+                            redraw = true;
+                        }
+                        
+                        
+                    }                               
                     break;
                     
             }
@@ -255,7 +270,10 @@ int main(void)
         if (redraw && al_event_queue_is_empty(event_line) && mode_locked)
         {
             redraw = false;
-            print_display( &snek,snek_body,NULL,lenght+1);
+
+            print_display( &snek,snek_body,NULL,&food,lenght+1);
+            
+            
             if (interception(snek.position_x,snek.position_y,(void *) snek_body,lenght))
             {
                 printf("Game Over\n");
@@ -263,6 +281,7 @@ int main(void)
             }
         }
     }
+   // write_high_score(score);
     
    
     free(snek_body);
