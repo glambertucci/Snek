@@ -28,7 +28,7 @@
 #define MID_SPEED (4)
  #define HIGH_SPEED (16)
 #define SLOW_GROWTH (1)
-#define MID_GROWTH  (2)
+#define MID_GROWTH  (5)
 #define FAST_GROWTH (3)
 
 
@@ -50,7 +50,7 @@ int main(void)
     bool mode_locked = false;                   // bloquea el modo de la dificultad
     bool wait_key = true;
     char mode = 0;                              // aqui se guarda la dificultad elegida
-    int speed = 0, growth = 0,lenght =(-1), score = 0;     
+    int speed = 0, growth = 0,lenght =(-1), score = 0, growth_copy = 0;     
     
     bool close_screen = false;                  // Determina si termina el programa
     bool redraw = false;     
@@ -257,8 +257,7 @@ int main(void)
             redraw = false;
 
             print_display( &snek,snek_body,NULL,&food,lenght+1);
-            
-            
+
             if (interception(snek.position_x,snek.position_y,(void *) snek_body,lenght))
             {
                 printf("Game Over\n");
@@ -268,13 +267,17 @@ int main(void)
             {
                 ++score;
                 food_exist = false;
+                growth_copy = growth;
                  if (lenght == -1)
-                    ++lenght;
-                            
+                    ++lenght;                
+            }
+            if (growth_copy > 0)
+            {
                 if (snek_body = manage_body (snek_body, lenght, &snek))
                     ++lenght;
                 else
                     close_screen = true;
+                --growth_copy;
             }
         }
     }
@@ -284,6 +287,7 @@ int main(void)
     
    
     free(snek_body);
+    printf("pap");
     al_destroy_bitmap(difficulty[HARD_MODE].bitmap);
     al_destroy_bitmap(difficulty[EASY_MODE].bitmap);
     al_destroy_bitmap(difficulty[MEDIUM_MODE].bitmap);
