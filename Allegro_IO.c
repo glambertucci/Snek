@@ -128,3 +128,27 @@ void write_high_score (int score)
 		fclose(high_score);
 	}
 }
+
+char * get_input( void)
+{
+    int counter;
+    char input[20];
+    char * return_input = input;
+    char key;
+    for ( counter = 0; ( ((key = getchar()) != '\n') && (counter < 19) ); ++counter)
+    {
+        input[counter] = key;
+    }
+    input[counter] = 0;
+    
+    if (counter >= 19)
+    {
+        printf("Some Ltters\n");
+        while (getchar() != '\n')
+        {
+        }
+    }
+    printf("Input done\n");
+    
+    return return_input;
+}

@@ -15,10 +15,12 @@
 #include <stdbool.h>
 
 
-#define SQUARE_X(counter) (ESPACIO_LAT+(counter * ESPACIO_INT) + (counter * LARGO_X ))
+#define SPACE_X(counter,display_w,largo) ( ( (UNIT * display_w * ( 1 +counter )) / 4.0 ) - (largo / 2) )
+#define SPACE_Y(display_h) ( (display_h * UNIT / 2 )+ TEXT_SPACE )
+#define LARGO_X(display_w) ( display_w * UNIT / 5)
+#define LARGO_Y(display_h) ( display_h * UNIT / 10)
 
-
-void init_coord (void * element_pointer ,bool button_enabled,void * bitmap_pointer)
+void init_coord (void * element_pointer ,bool button_enabled,void * bitmap_pointer, int display_h, int display_w)
 {
     button * elemento = element_pointer;
     ALLEGRO_BITMAP * bitmap = bitmap_pointer;
@@ -29,18 +31,18 @@ void init_coord (void * element_pointer ,bool button_enabled,void * bitmap_point
 
     if (!(elemento->button_enabled))                          // Si es la snek
     {
-        elemento->position_x = UNIT * 13; 
-        elemento->position_y = UNIT * 7 + TEXT_SPACE;
+        elemento->position_x = UNIT * display_w / 2; 
+        elemento->position_y = (UNIT * display_h / 2) + TEXT_SPACE;
         elemento->lenght_x= UNIT;
         elemento->lenght_y= UNIT;
         ++counter1;
     }
     else if (elemento->button_enabled)                  // Si es un boton
     {
-        elemento->position_x = SQUARE_X(counter2); 
-        elemento->position_y = DISPLAY_H / 2.0;
-        elemento->lenght_x= LARGO_X;
-        elemento->lenght_y= LARGO_Y;
+        elemento->position_x = SPACE_X(counter2,display_w,LARGO_X(display_w)); 
+        elemento->position_y = SPACE_Y(display_h);
+        elemento->lenght_x= LARGO_X(display_w);
+        elemento->lenght_y= LARGO_Y(display_h);
         ++counter2;
     }
     elemento->bitmap = bitmap;
@@ -73,16 +75,16 @@ void apply_movement(button * snek, valid_keys * active_keys,body * snek_body, in
         snek->position_x += UNIT;
 }
 
-void correct_movement(button * snek)
+void correct_movement(button * snek,int display_h,int display_w)
 {
-    if (snek->position_x >= DISPLAY_W)
+    if (snek->position_x >= display_w * UNIT)
         snek->position_x = 0;
-    if (snek->position_y >= DISPLAY_H)
+    if (snek->position_y >= display_h * UNIT + TEXT_SPACE)
         snek->position_y = 0 + TEXT_SPACE;
     if (snek->position_x < 0)
-        snek->position_x = DISPLAY_W;
-    if (snek->position_y < 0 + TEXT_SPACE)
-        snek->position_y = DISPLAY_H;
+        snek->position_x = display_w * UNIT;
+    if (snek->position_y < TEXT_SPACE)
+        snek->position_y = (display_h * UNIT)+ TEXT_SPACE;
 }
 #include "Allegro_IO.h"
 bool interception (int head_x, int head_y, void * forb_coord, int elements)
@@ -91,7 +93,7 @@ bool interception (int head_x, int head_y, void * forb_coord, int elements)
     int counter;
     bool valid = false;
     
-    for (counter = 0 ; !valid && (counter < (elements+1)) ; ++counter) // Se fija si se toco a algun boton
+    for (counter = 0 ; !valid && (counter < (elements)) ; ++counter) // Se fija si se toco a algun boton
     {
         valid = click_button(head_x,head_y,(snek_body + counter)->x,(snek_body + counter)->y, 20, 20);
     }
@@ -154,11 +156,11 @@ int power ( int base, int exp)
 	return num;
 }
 #include <time.h> 
-void generate_food (body * food)
+void generate_food (body * food,int display_h, int display_w)
 {
     srand(time(NULL));
-    food->x =UNIT * ( rand() % HORIZONTAL_UNITS);
-    food->y =UNIT * ( rand() % VERTICAL_UNITS) + TEXT_SPACE;
+    food->x =UNIT * ( rand() % display_w);
+    food->y =UNIT * ( rand() % display_h) + TEXT_SPACE;
 }
 #include "Allegro_IO.h"
 bool valid_placement(body * food, button * snek, body * snek_body,int lenght)
@@ -199,4 +201,27 @@ bool valid_movement(int keycode,valid_keys * active_keys)
     
     return valid;
     
+}
+
+bool validate_input(char * input)
+{
+    int counter;
+    bool valid = true;
+    
+    if ( input[0] == 0)
+    {
+        valid = false;
+    }
+    else
+    {
+        for (counter = 0 ; input[counter] != 0 ; ++input)
+        {
+            if( (input[counter] > '9') || (input[counter] < '0') )
+            {
+                valid = false;
+            }
+        }
+    }
+    
+    return valid;
 }

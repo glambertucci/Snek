@@ -26,7 +26,7 @@
 #define HARD_MODE (2)
 #define LOW_SPEED (2)
 #define MID_SPEED (4)
- #define HIGH_SPEED (16)
+#define HIGH_SPEED (16)
 #define SLOW_GROWTH (1)
 #define MID_GROWTH  (5)
 #define FAST_GROWTH (3)
@@ -50,21 +50,44 @@ int main(void)
     bool mode_locked = false;                   // bloquea el modo de la dificultad
     bool wait_key = true;
     char mode = 0;                              // aqui se guarda la dificultad elegida
-    int speed = 0, growth = 0,lenght =(-1), score = 0, growth_copy = 0;     
+    char * input;
+    int speed = 0, growth = 0,lenght =(-1), score = 0, growth_copy = 0, display_h, display_w;     
     
     bool close_screen = false;                  // Determina si termina el programa
     bool redraw = false;     
     bool food_exist = false;
+    bool valid_input = false;
+    
+    while (!valid_input)
+    {
+        printf("que alto? Unidad = 40 x 40\n");
+        input = get_input();
+        if ((valid_input = validate_input(input)))
+            display_h = convert_char(input);
+        if ( ( (display_h < 10) || (display_h > 70) ) && (valid_input) )
+            valid_input = false;
+    }
+    valid_input = false;
+    input = NULL;
+    while (!valid_input)
+    {
+        printf("que ancho? Unidad = 40 x 40\n");
+        input = get_input();
+        if ((valid_input = validate_input(input)))
+            display_w = convert_char(input);
+        if ( ( (display_w < 10) || (display_w > 70) ) && (valid_input) )
+            valid_input = false;
+    }
     
     
-    init_coord((void *) &(difficulty[EASY_MODE]) , true, NULL);     // Inicia los botones y la cabeza de la serpiente
-    init_coord((void *) &(difficulty[MEDIUM_MODE]) , true, NULL);
-    init_coord((void *) &(difficulty[HARD_MODE]) ,  true, NULL);
-    init_coord((void *) &snek, false, NULL);
+    init_coord((void *) &(difficulty[EASY_MODE]) , true, NULL, display_h, display_w);     // Inicia los botones y la cabeza de la serpiente
+    init_coord((void *) &(difficulty[MEDIUM_MODE]) , true, NULL, display_h, display_w);
+    init_coord((void *) &(difficulty[HARD_MODE]) ,  true, NULL, display_h, display_w);
+    init_coord((void *) &snek, false, NULL, display_h, display_w);
     
     if (al_init())
     {
-        if ( ( display = al_create_display(DISPLAY_W, DISPLAY_H)))
+        if ( ( display = al_create_display(display_w * UNIT, display_h * UNIT + TEXT_SPACE)))
         {
             if (event_line = al_create_event_queue())
             {
@@ -204,6 +227,8 @@ int main(void)
                             wait_key = false;
                         }
                     }
+                    else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE)
+                        al_rest(5);
                     printf(" UP = %d DOWN = %d LEFT = %d RIGHT = %d space = %d\n",active_keys.up,active_keys.down,active_keys.left,active_keys.right,active_keys.pause);
                     break;
 
@@ -236,7 +261,7 @@ int main(void)
                         if (!close_screen)
                         {
                             apply_movement(&snek, &active_keys,snek_body,lenght);
-                            correct_movement(&snek);     
+                            correct_movement(&snek,display_h,display_w);     
                             wait_key = true;
                             redraw = true;
                         }
@@ -244,7 +269,7 @@ int main(void)
                     while (!food_exist)
                     {
                         
-                        generate_food (&food);
+                        generate_food (&food, display_h, display_w);
                         food_exist = valid_placement(&food, &snek, snek_body, lenght);
                     }
                     break;
@@ -256,7 +281,7 @@ int main(void)
         {
             redraw = false;
 
-            print_display( &snek,snek_body,NULL,&food,lenght+1);
+            print_display( &snek,snek_body,NULL,&food,lenght);
 
             if (interception(snek.position_x,snek.position_y,(void *) snek_body,lenght))
             {
@@ -283,7 +308,7 @@ int main(void)
     }
     if ( score > read_high_score() )
         write_high_score(score);
-    printf("Score = %d/n", score);
+    printf("Score = %d\n", score);
     
    
     free(snek_body);

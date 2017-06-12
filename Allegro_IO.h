@@ -60,5 +60,6 @@ void manage_movement ( valid_keys * active_keys, int key_typed, bool is_key_down
 
 int read_high_score (void);
 void write_high_score (int score);
+char * get_input( void);
 
 #endif /* ALLEGRO_IO_H */
