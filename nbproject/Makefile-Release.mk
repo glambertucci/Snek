@@ -37,7 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/Allegro_IO.o \
 	${OBJECTDIR}/Allegro_main.o \
-	${OBJECTDIR}/Allegro_operations.o
+	${OBJECTDIR}/Operations.o
 
 
 # C Compiler Flags
@@ -74,10 +74,10 @@ ${OBJECTDIR}/Allegro_main.o: Allegro_main.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Allegro_main.o Allegro_main.c
 
-${OBJECTDIR}/Allegro_operations.o: Allegro_operations.c
+${OBJECTDIR}/Operations.o: Operations.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Allegro_operations.o Allegro_operations.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Operations.o Operations.c
 
 # Subprojects
 .build-subprojects:

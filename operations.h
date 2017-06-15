@@ -40,5 +40,4 @@ bool valid_movement(int keycode,valid_keys * active_keys);
 bool validate_input(char * input);
 
 
-
 #endif /* ALLEGRO_OPERATIONS_H */

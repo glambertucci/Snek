@@ -19,7 +19,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include "Common_definitions.h"
-#include "Allegro_operations.h"
+#include "operations.h"
 #include <stdio.h>
 
 // Se fija si al hacer click, tocaste algun boton. Si lo tocaste devuelve 'true', sino devuelve 'false'

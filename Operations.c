@@ -11,7 +11,7 @@
  * Created on June 8, 2017, 7:38 PM
  */
 
-#include "Allegro_operations.h"
+#include "operations.h"
 #include <stdbool.h>
 
 
@@ -59,7 +59,7 @@ void apply_movement(button * snek, valid_keys * active_keys,body * snek_body, in
         snek_body[counter].x = snek_body[counter-1].x;
         snek_body[counter].y = snek_body[counter-1].y;
     }
-    if ((counter == 0) || (lenght ==0))
+    if ((lenght >0))
     {
         snek_body[0].x = snek->position_x;
         snek_body[0].y =snek->position_y;
@@ -99,7 +99,7 @@ bool interception (int head_x, int head_y, void * forb_coord, int elements)
     }
     
 
-    printf((valid ? "OK\n" : "OUT\n"));
+    //printf((valid ? "OK\n" : "OUT\n"));
     return valid;
 }
 

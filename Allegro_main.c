@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_color.h>
-#include "Allegro_operations.h"
+#include "operations.h"
 #include "Common_definitions.h"
 #include "Allegro_IO.h"
 
