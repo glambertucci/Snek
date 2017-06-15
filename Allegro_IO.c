@@ -38,8 +38,8 @@ bool click_button(int mouse_x, int mouse_y, int button_x, int button_y , int len
 {
     bool valid = false; 
     
-    printf("button_x = %d < mouse_x = %d  < %d = button_x + lenght_x\n",button_x,mouse_x,button_x + lenght_x);
-    printf("button_y = %d < mouse_y = %d  < %d = button_y + lenght_y\n",button_y,mouse_y,button_y + lenght_y);
+    //printf("button_x = %d < mouse_x = %d  < %d = button_x + lenght_x\n",button_x,mouse_x,button_x + lenght_x);
+    //printf("button_y = %d < mouse_y = %d  < %d = button_y + lenght_y\n",button_y,mouse_y,button_y + lenght_y);
     if ( (mouse_x >= button_x) && (mouse_x <= ( button_x + lenght_x) ))
     {
         if ((mouse_y >= button_y) && (mouse_y <= ( button_y + lenght_y) ))
@@ -85,20 +85,20 @@ void manage_movement ( valid_keys * active_keys, int key_typed, bool is_key_down
     }
 }
 
-int read_high_score (void)
+int read_high_score (char * file)
 {
 	
 	FILE * high_score = NULL;
 	char line [4];
         int num = -1;
 
-	if (! (high_score = fopen("score.txt", "r"))) // fopen
+	if (! (high_score = fopen(file, "r"))) // fopen
 	{
-		high_score = fopen("score.txt", "w");
+		high_score = fopen(file, "w");
    		fprintf(high_score, "0"); // fprintf
 		fclose(high_score); // fclose
 	}
-	high_score = fopen("score.txt", "r");
+	high_score = fopen(file, "r");
 	
         if ( !fgets(line, 4,high_score))
         {
@@ -114,12 +114,12 @@ int read_high_score (void)
 	return num;
 }
 
-void write_high_score (int score)
+void write_high_score (int score, char * file)
 {
 	FILE * high_score = NULL;
         char dest [5]={0,0,0,0,0};
         convert_int(score, dest);
-	if ((high_score = fopen("score.txt", "w+")))
+	if ((high_score = fopen(file, "w+")))
 	{
 		if ( fputs(dest,high_score) == EOF )
                 {

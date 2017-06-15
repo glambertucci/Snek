@@ -28,9 +28,11 @@
 #define MID_SPEED (4)
 #define HIGH_SPEED (16)
 #define SLOW_GROWTH (1)
-#define MID_GROWTH  (5)
+#define MID_GROWTH  (2)
 #define FAST_GROWTH (3)
-
+#define EASY_SCORE "easy score.txt"
+#define MEDIUM_SCORE "regular score.txt"
+#define HARD_SCORE "hard score.txt"
 
 #define DIFFICULTY_BUTTONS (3)
 
@@ -51,7 +53,8 @@ int main(void)
     bool wait_key = true;
     char mode = 0;                              // aqui se guarda la dificultad elegida
     char * input;
-    int speed = 0, growth = 0,lenght =(-1), score = 0, growth_copy = 0, display_h, display_w;     
+    char * dif = NULL;
+    int speed = 0, growth = 0,lenght =0, score = 0, growth_copy = 0, display_h, display_w;     
     
     bool close_screen = false;                  // Determina si termina el programa
     bool redraw = false;     
@@ -183,7 +186,7 @@ int main(void)
     al_clear_to_color(al_color_name("green"));      // Ahora es el mismo que el cuerpo pero despues va a haber que cambiarlo
     
     al_set_target_bitmap(al_get_backbuffer(display)); // Pongo la pantalla en blanco 
-    al_clear_to_color(al_color_name("white"));
+    al_clear_to_color(al_color_name("hotpink"));
     
     al_set_target_bitmap(difficulty[EASY_MODE].bitmap); // Cargo el color del boton facil
     al_clear_to_color(al_color_name("white"));
@@ -202,7 +205,7 @@ int main(void)
     
     al_start_timer(timer);
     
-    printf ( "high score = %d \n",read_high_score());
+    
     
     while (!close_screen)
     {
@@ -229,7 +232,7 @@ int main(void)
                     }
                     else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE)
                         al_rest(5);
-                    printf(" UP = %d DOWN = %d LEFT = %d RIGHT = %d space = %d\n",active_keys.up,active_keys.down,active_keys.left,active_keys.right,active_keys.pause);
+                    //printf(" UP = %d DOWN = %d LEFT = %d RIGHT = %d space = %d\n",active_keys.up,active_keys.down,active_keys.left,active_keys.right,active_keys.pause);
                     break;
 
                 case ALLEGRO_EVENT_DISPLAY_CLOSE : close_screen = true; break; //Si se cierra la pantalla termina el juego
@@ -239,19 +242,20 @@ int main(void)
                         mode =button_pressed(event.mouse.x, event.mouse.y, difficulty, DIFFICULTY_BUTTONS);
                         switch (mode)
                         {
-                            case EASY_MODE: speed = LOW_SPEED; growth = SLOW_GROWTH ;
+                            case EASY_MODE: speed = LOW_SPEED; growth = SLOW_GROWTH ; dif = EASY_SCORE;
                             printf("------ EASY MODE \n speed = %d      growth = %d\n", speed, growth);
                             mode_locked = true;
                             break;
-                            case MEDIUM_MODE: speed = MID_SPEED; growth = MID_GROWTH ;
+                            case MEDIUM_MODE: speed = MID_SPEED; growth = MID_GROWTH ; dif = MEDIUM_SCORE;
                             printf("------ MEDIUM MODE \n speed = %d      growth = %d\n", speed, growth);
                             mode_locked = true;
                             break;
-                            case HARD_MODE: speed = HIGH_SPEED; growth = FAST_GROWTH ;
+                            case HARD_MODE: speed = HIGH_SPEED; growth = FAST_GROWTH ; dif = HARD_SCORE;
                             printf("------ HARD MODE \n speed = %d      growth = %d\n", speed, growth);
                             mode_locked = true;
                             break;
                         }
+                        printf ( "high score = %d \n",read_high_score(dif));
                     }
                     break; 
                 case ALLEGRO_EVENT_TIMER :
@@ -266,7 +270,7 @@ int main(void)
                             redraw = true;
                         }
                     } 
-                    while (!food_exist)
+                    while (!food_exist && mode_locked)
                     {
                         
                         generate_food (&food, display_h, display_w);
@@ -306,8 +310,8 @@ int main(void)
             }
         }
     }
-    if ( score > read_high_score() )
-        write_high_score(score);
+    if ( score > read_high_score(dif) )
+        write_high_score(score, dif);
     printf("Score = %d\n", score);
     
    

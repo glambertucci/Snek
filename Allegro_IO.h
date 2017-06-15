@@ -58,8 +58,8 @@ void print_display (button * head,body * snek_body, void * background,body * foo
 // bool is_key_down : Establece si se esta presionando la tecla, o si se esta levantado el dedo. 
 void manage_movement ( valid_keys * active_keys, int key_typed, bool is_key_down);
 
-int read_high_score (void);
-void write_high_score (int score);
+int read_high_score (char * file);
+void write_high_score (int score, char * file);
 char * get_input( void);
 
 #endif /* ALLEGRO_IO_H */
